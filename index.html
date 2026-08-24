@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Random Name Generator / ランダム名前生成ツール</title>
+<meta name="description" content="キャラクター名・ユーザー名・チーム名をカテゴリ別にランダム生成します。">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4214020669195548"
+     crossorigin="anonymous"></script>
+<style>
+  :root {
+    --bg: #120f18; --card: #1d1826; --text: #f5f2fa; --sub: #a89bc0;
+    --accent: #c084fc; --accent2: #fbbf24; --border: #2e2740;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: "Hiragino Kaku Gothic ProN", "Segoe UI", Arial, sans-serif;
+    background: var(--bg); color: var(--text); padding: 16px;
+  }
+  .wrap { max-width: 460px; margin: 0 auto; }
+  .top-row { display: flex; justify-content: flex-end; margin-bottom: 4px; }
+  .lang-btn { background: none; border: 1px solid var(--border); color: var(--sub); border-radius: 6px; padding: 4px 10px; font-size: 12px; cursor: pointer; }
+  h1 { font-size: 21px; text-align: center; margin: 4px 0 4px; }
+  .lead { text-align: center; color: var(--sub); font-size: 13px; margin-bottom: 18px; line-height: 1.6; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 14px; }
+  .tabs { display: flex; gap: 8px; margin-bottom: 14px; }
+  .tabs button {
+    flex: 1; padding: 9px; border: 1px solid var(--border); border-radius: 8px;
+    background: none; color: var(--sub); font-size: 12.5px; cursor: pointer;
+  }
+  .tabs button.active { background: var(--accent); color: #1e1030; border-color: var(--accent); font-weight: bold; }
+  .output-box {
+    background: #150f20; border: 1px solid var(--border); border-radius: 10px;
+    padding: 20px 14px; font-size: 24px; font-weight: bold; text-align: center; margin-bottom: 12px; color: var(--accent2);
+  }
+  .gen-btn, .copy-btn { width: 100%; padding: 12px; border: none; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 4px; }
+  .gen-btn { background: var(--accent); color: #1e1030; }
+  .copy-btn { background: none; border: 1px solid var(--border); color: var(--text); font-weight: normal; font-size: 13.5px; margin-top: 8px; }
+  .history { font-size: 12px; color: var(--sub); margin-top: 12px; border-top: 1px solid var(--border); padding-top: 8px; }
+  .history div { padding: 3px 0; }
+  .footer-links { text-align: center; font-size: 12px; color: var(--sub); margin-top: 4px; line-height: 1.8; }
+  .footer-links a { color: var(--accent2); text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top-row"><button class="lang-btn" id="langBtn">EN</button></div>
+  <h1 id="title">🎭 ランダム名前生成ツール</h1>
+  <p class="lead" id="lead">キャラクター名・ユーザー名・チーム名をカテゴリ別にランダム生成。</p>
+
+  <div class="card">
+    <div class="tabs">
+      <button id="tabFantasy" class="active"></button>
+      <button id="tabUsername"></button>
+      <button id="tabTeam"></button>
+    </div>
+    <div class="output-box" id="output">-</div>
+    <button class="gen-btn" id="genBtn"></button>
+    <button class="copy-btn" id="copyBtn"></button>
+    <div class="history" id="history"></div>
+  </div>
+
+  <p class="footer-links" id="footerLinks"></p>
+</div>
+
+<script>
+  const FANTASY_PREFIX = ['Ael','Thor','Mor','Kael','Fen','Bran','Dra','Lyr','Syl','Vor','Gar','Nym','Eld','Rho','Ysa','Cor'];
+  const FANTASY_SUFFIX = ['an','wyn','ric','dor','eth','ian','oth','ara','iel','ost','wen','ryn','dis','mor'];
+  const FANTASY_SURNAME = ['Stormwind','Ironheart','Shadowmere','Brightblade','Duskwalker','Frostborn','Emberfall','Wolfsbane','Stonehollow','Ravencrest','Nightshade','Goldleaf'];
+
+  const ADJECTIVES = ['Swift','Silent','Golden','Crimson','Lunar','Electric','Frozen','Wild','Cosmic','Rusty','Hidden','Rapid','Neon','Velvet','Iron','Solar'];
+  const NOUNS = ['Fox','Falcon','Panda','Ninja','Comet','Wolf','Otter','Raven','Tiger','Nomad','Pixel','Rocket','Phantom','Maple','Cobra','Drifter'];
+  const TEAM_NOUNS = ['Dragons','Titans','Wolves','Phoenixes','Vipers','Storms','Guardians','Rebels','Knights','Falcons','Wanderers','Comets'];
+
+  const I18N = {
+    ja: {
+      title: '🎭 ランダム名前生成ツール',
+      lead: 'キャラクター名・ユーザー名・チーム名をカテゴリ別にランダム生成。',
+      tabFantasy: 'キャラクター名',
+      tabUsername: 'ユーザー名',
+      tabTeam: 'チーム名',
+      genBtn: '生成する',
+      copyBtn: 'コピーする',
+      copied: 'コピーしました!',
+      footerLinks: '他のツールも作っています → <a href="https://naginata-work.github.io/password-gen/" target="_blank" rel="noopener">パスワード生成</a> / <a href="https://naginata-work.github.io/dice-roller/" target="_blank" rel="noopener">サイコロ</a>'
+    },
+    en: {
+      title: '🎭 Random Name Generator',
+      lead: 'Generate fantasy character names, usernames, or team names on demand.',
+      tabFantasy: 'Character name',
+      tabUsername: 'Username',
+      tabTeam: 'Team name',
+      genBtn: 'Generate',
+      copyBtn: 'Copy',
+      copied: 'Copied!',
+      footerLinks: 'Also made these → <a href="https://naginata-work.github.io/password-gen/" target="_blank" rel="noopener">Password Generator</a> / <a href="https://naginata-work.github.io/dice-roller/" target="_blank" rel="noopener">Dice Roller</a>'
+    }
+  };
+
+  function loadLang() { try { return localStorage.getItem('nameGenLang'); } catch (e) { return null; } }
+  function saveLang(l) { try { localStorage.setItem('nameGenLang', l); } catch (e) {} }
+  let lang = loadLang() === 'en' ? 'en' : 'ja';
+  function t() { return I18N[lang]; }
+
+  let mode = 'fantasy';
+  let current = '';
+  let history = [];
+
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+  function generate() {
+    if (mode === 'fantasy') {
+      const first = pick(FANTASY_PREFIX) + pick(FANTASY_SUFFIX);
+      current = first + ' ' + pick(FANTASY_SURNAME);
+    } else if (mode === 'username') {
+      const num = Math.floor(Math.random() * 900) + 10;
+      current = pick(ADJECTIVES) + pick(NOUNS) + num;
+    } else {
+      current = 'The ' + pick(ADJECTIVES) + ' ' + pick(TEAM_NOUNS);
+    }
+    document.getElementById('output').textContent = current;
+    history.unshift(current);
+    history = history.slice(0, 8);
+    renderHistory();
+  }
+
+  function renderHistory() {
+    document.getElementById('history').innerHTML = history.map(h => `<div>${h}</div>`).join('');
+  }
+
+  document.getElementById('genBtn').addEventListener('click', generate);
+
+  function setMode(newMode, btnId) {
+    mode = newMode;
+    ['tabFantasy', 'tabUsername', 'tabTeam'].forEach(id => document.getElementById(id).classList.remove('active'));
+    document.getElementById(btnId).classList.add('active');
+    history = [];
+    generate();
+  }
+  document.getElementById('tabFantasy').addEventListener('click', () => setMode('fantasy', 'tabFantasy'));
+  document.getElementById('tabUsername').addEventListener('click', () => setMode('username', 'tabUsername'));
+  document.getElementById('tabTeam').addEventListener('click', () => setMode('team', 'tabTeam'));
+
+  document.getElementById('copyBtn').addEventListener('click', async () => {
+    if (!current) return;
+    try {
+      await navigator.clipboard.writeText(current);
+      const btn = document.getElementById('copyBtn');
+      const original = btn.textContent;
+      btn.textContent = t().copied;
+      setTimeout(() => { btn.textContent = original; }, 1500);
+    } catch { alert(current); }
+  });
+
+  function renderStaticText() {
+    document.getElementById('title').textContent = t().title;
+    document.getElementById('lead').textContent = t().lead;
+    document.getElementById('tabFantasy').textContent = t().tabFantasy;
+    document.getElementById('tabUsername').textContent = t().tabUsername;
+    document.getElementById('tabTeam').textContent = t().tabTeam;
+    document.getElementById('genBtn').textContent = t().genBtn;
+    document.getElementById('copyBtn').textContent = t().copyBtn;
+    document.getElementById('footerLinks').innerHTML = t().footerLinks;
+  }
+
+  document.getElementById('langBtn').addEventListener('click', () => {
+    lang = lang === 'ja' ? 'en' : 'ja';
+    saveLang(lang);
+    document.getElementById('langBtn').textContent = lang === 'ja' ? 'EN' : 'JA';
+    renderStaticText();
+  });
+
+  document.getElementById('langBtn').textContent = lang === 'ja' ? 'EN' : 'JA';
+  renderStaticText();
+  generate();
+</script>
+</body>
+</html>
