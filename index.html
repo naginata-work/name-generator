@@ -61,7 +61,25 @@
     <div class="history" id="history"></div>
   </div>
 
+  <div class="card" style="font-size:13px; line-height:1.9; color:var(--sub);">
+    <h2 id="aboutTitle" style="font-size:15px; color:var(--text); margin:0 0 8px;"></h2>
+    <p id="aboutBody1" style="margin:0 0 10px;"></p>
+    <p id="aboutBody2" style="margin:0;"></p>
+  </div>
+
+  <div class="card" style="font-size:13px; line-height:1.9; color:var(--sub);">
+    <h2 id="faqTitle" style="font-size:15px; color:var(--text); margin:0 0 10px;"></h2>
+    <p id="faq1Q" style="margin:0 0 4px; color:var(--text); font-weight:bold;"></p>
+    <p id="faq1A" style="margin:0 0 12px;"></p>
+    <p id="faq2Q" style="margin:0 0 4px; color:var(--text); font-weight:bold;"></p>
+    <p id="faq2A" style="margin:0;"></p>
+  </div>
+
   <p class="footer-links" id="footerLinks"></p>
+  <p style="text-align:center; font-size:11px; color:var(--sub); margin-top:4px;">
+    <a href="https://naginata-work.github.io/" style="color:var(--sub);" id="allToolsLink"></a> ・
+    <a href="https://naginata-work.github.io/privacy.html" style="color:var(--sub);" id="privacyLink"></a>
+  </p>
 </div>
 
 <script>
@@ -83,7 +101,15 @@
       genBtn: '生成する',
       copyBtn: 'コピーする',
       copied: 'コピーしました!',
-      footerLinks: '他のツールも作っています → <a href="https://naginata-work.github.io/password-gen/" target="_blank" rel="noopener">パスワード生成</a> / <a href="https://naginata-work.github.io/dice-roller/" target="_blank" rel="noopener">サイコロ</a>'
+      footerLinks: '他のツールも作っています → <a href="https://naginata-work.github.io/password-gen/" target="_blank" rel="noopener">パスワード生成</a> / <a href="https://naginata-work.github.io/dice-roller/" target="_blank" rel="noopener">サイコロ</a>',
+      aboutTitle: '使い方について',
+      aboutBody1: '小説やTRPGでキャラクターを作るとき、ゲームや配信用のユーザー名を決めるとき、部活やチームの名前を考えるとき、「いい名前が思いつかない」という創作の初手で止まってしまうことはよくあります。',
+      aboutBody2: 'このツールは「キャラクター名」「ユーザー名」「チーム名」の3カテゴリそれぞれに専用の単語リストを持っており、タブを切り替えてワンタップで生成できます。気に入らなければ何度でも生成し直せるので、たたき台として使ってからアレンジするのもおすすめです。',
+      faqTitle: 'よくある質問',
+      faq1Q: '生成される名前の組み合わせは何通りくらいある?',
+      faq1A: 'キャラクター名は接頭辞・接尾辞・姓のリストの掛け合わせで数百通り、ユーザー名は形容詞・名詞・数字の組み合わせで数万通り以上のバリエーションがあります。',
+      faq2Q: '同じ名前が続けて出ることはある?',
+      faq2A: '完全にランダムな抽選のため、まれに近い組み合わせが続くことはあります。気に入らない場合はもう一度「生成する」を押せば、別の組み合わせが表示されます。',
     },
     en: {
       title: '🎭 Random Name Generator',
@@ -94,7 +120,15 @@
       genBtn: 'Generate',
       copyBtn: 'Copy',
       copied: 'Copied!',
-      footerLinks: 'Also made these → <a href="https://naginata-work.github.io/password-gen/" target="_blank" rel="noopener">Password Generator</a> / <a href="https://naginata-work.github.io/dice-roller/" target="_blank" rel="noopener">Dice Roller</a>'
+      footerLinks: 'Also made these → <a href="https://naginata-work.github.io/password-gen/" target="_blank" rel="noopener">Password Generator</a> / <a href="https://naginata-work.github.io/dice-roller/" target="_blank" rel="noopener">Dice Roller</a>',
+      aboutTitle: 'How it works',
+      aboutBody1: "Naming a character for a story or tabletop game, picking a username for a game or stream, or coming up with a team name — creative projects often stall right at this first, small step.",
+      aboutBody2: 'This tool keeps a dedicated word list for each of three categories — character names, usernames, and team names — and generates a new combination with one tap after switching tabs. If you don\'t like the result, generating again is instant, so it works well as a rough draft to refine.',
+      faqTitle: 'FAQ',
+      faq1Q: 'How many possible combinations are there?',
+      faq1A: 'Character names combine prefixes, suffixes, and surnames for a few hundred possibilities; usernames combine adjectives, nouns, and numbers for tens of thousands of variations or more.',
+      faq2Q: 'Can the same name come up twice in a row?',
+      faq2A: "Since each result is fully random, similar combinations can occasionally repeat. If you don't like what you get, just hit \"Generate\" again for a fresh combination.",
     }
   };
 
@@ -162,6 +196,18 @@
     document.getElementById('genBtn').textContent = t().genBtn;
     document.getElementById('copyBtn').textContent = t().copyBtn;
     document.getElementById('footerLinks').innerHTML = t().footerLinks;
+    document.getElementById('aboutTitle').textContent = t().aboutTitle;
+    document.getElementById('aboutBody1').textContent = t().aboutBody1;
+    document.getElementById('aboutBody2').textContent = t().aboutBody2;
+    document.getElementById('faqTitle').textContent = t().faqTitle;
+    document.getElementById('faq1Q').textContent = t().faq1Q;
+    document.getElementById('faq1A').textContent = t().faq1A;
+    document.getElementById('faq2Q').textContent = t().faq2Q;
+    document.getElementById('faq2A').textContent = t().faq2A;
+    document.getElementById('allToolsLink').textContent = lang === 'ja' ? '他のツール一覧' : 'All tools';
+    document.getElementById('allToolsLink').href = 'https://naginata-work.github.io/';
+    document.getElementById('privacyLink').textContent = lang === 'ja' ? 'プライバシーポリシー' : 'Privacy policy';
+    document.getElementById('privacyLink').href = 'https://naginata-work.github.io/privacy.html';
   }
 
   document.getElementById('langBtn').addEventListener('click', () => {
